@@ -67,9 +67,17 @@ router.post("/", upload.single("file"), async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     //Step 4: task 1 - insert code here
+    const db = await connectToDatabase();
     //Step 4: task 2 - insert code here
+    const collection = db.collection("secondChanceItems");
     //Step 4: task 3 - insert code here
+    const secondChanceItem = await collection.findOne({ id: id });
     //Step 4: task 4 - insert code here
+    if (!secondChanceItem) {
+      return res.status(404).send("secondChanceItem not found");
+    }
+
+    res.json(secondChanceItem);
   } catch (e) {
     next(e);
   }
@@ -79,10 +87,37 @@ router.get("/:id", async (req, res, next) => {
 router.put("/:id", async (req, res, next) => {
   try {
     //Step 5: task 1 - insert code here
+    const db = await connectToDatabase();
     //Step 5: task 2 - insert code here
+    const collection = db.collection("secondChanceItems");
     //Step 5: task 3 - insert code here
+    const secondChanceItem = await collection.findOne({ id });
+
+    if (!secondChanceItem) {
+      logger.error("secondChanceItem not found");
+      return res.status(404).json({ error: "secondChanceItem not found" });
+    }
     //Step 5: task 4 - insert code here
+    secondChanceItem.category = req.body.category;
+    secondChanceItem.condition = req.body.condition;
+    secondChanceItem.age_days = req.body.age_days;
+    secondChanceItem.description = req.body.description;
+    secondChanceItem.age_years = Number(
+      (secondChanceItem.age_days / 365).toFixed(1),
+    );
+    secondChanceItem.updatedAt = new Date();
+
+    const updatepreloveItem = await collection.findOneAndUpdate(
+      { id },
+      { $set: secondChanceItem },
+      { returnDocument: "after" },
+    );
     //Step 5: task 5 - insert code here
+    if (updatepreloveItem) {
+      res.json({ uploaded: "success" });
+    } else {
+      res.json({ uploaded: "failed" });
+    }
   } catch (e) {
     next(e);
   }
@@ -92,9 +127,19 @@ router.put("/:id", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     //Step 6: task 1 - insert code here
+    const db = await connectToDatabase();
     //Step 6: task 2 - insert code here
+    const collection = db.collection("secondChanceItems");
     //Step 6: task 3 - insert code here
+    const secondChanceItem = await collection.findOne({ id });
+
+    if (!secondChanceItem) {
+      logger.error("secondChanceItem not found");
+      return res.status(404).json({ error: "secondChanceItem not found" });
+    }
     //Step 6: task 4 - insert code here
+    await collection.deleteOne({ id });
+    res.json({ deleted: "success" });
   } catch (e) {
     next(e);
   }

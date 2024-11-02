@@ -3,7 +3,8 @@ require("dotenv").config();
 const MongoClient = require("mongodb").MongoClient;
 
 // MongoDB connection URL with authentication options
-let url = `${process.env.MONGO_URL}`;
+let url =
+  "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.10";
 
 let dbInstance = null;
 const dbName = `${process.env.MONGO_DB}`;

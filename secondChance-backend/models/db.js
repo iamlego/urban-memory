@@ -7,7 +7,6 @@ let dbInstance = null;
 // MongoDB connection URL with authentication options
 let url = `${process.env.MONGO_URL}`;
 
-console.log(typeof(url), url);
 
 const dbName = `${process.env.MONGO_DB}`;
 
@@ -28,9 +27,6 @@ async function connectToDatabase() {
     // Task 3: Return database instance
     return dbInstance
 }
-
-
-console.log(connectToDatabase());
 
 
 module.exports = connectToDatabase;

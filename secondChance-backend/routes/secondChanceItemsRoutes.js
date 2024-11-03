@@ -1,54 +1,159 @@
-require('dotenv').config();
 const express = require('express');
-const axios = require('axios');
-const logger = require('./logger');
-const expressPino = require('express-pino-logger')({ logger });
-const natural = require("natural");
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const router = express.Router();
+const connectToDatabase = require('../models/db');
+const logger = require('../logger');
 
-const app = express();
-const port = process.env.PORT || 3000;
+// Define the upload directory path
+const directoryPath = 'public/images';
 
-app.use(express.json());
-app.use(expressPino);
+// Set up storage for uploaded files
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, directoryPath); // Specify the upload directory
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Use the original file name
+  },
+});
 
-// Define the sentiment analysis route
-app.post('/sentiment', async (req, res) => {
-    const { sentence } = req.query;
+const upload = multer({ storage: storage });
 
 
-    if (!sentence) {
-        logger.error('No sentence provided');
-        return res.status(400).json({ error: 'No sentence provided' });
-    }
-
-    // Initialize the sentiment analyzer with the Natural's PorterStemmer and "English" language
-    const Analyzer = natural.SentimentAnalyzer;
-    const stemmer = natural.PorterStemmer;
-    const analyzer = new Analyzer("English", stemmer, "afinn");
-
-    // Perform sentiment analysis
+// Get all secondChanceItems
+router.get('/', async (req, res, next) => {
+    logger.info('/ called');
     try {
-        const analysisResult = analyzer.getSentiment(sentence.split(' '));
+        //Step 2: task 1 - insert code here
+        const db = await connectToDatabase();
+        //Step 2: task 2 - insert code here
+        const collection = db.collection("secondChanceItems");
+        //Step 2: task 3 - insert code here
+        const secondChanceItems = await collection.find({}).toArray();
+        //Step 2: task 4 - insert code here
+        res.json(secondChanceItems);
 
-        let sentiment = "neutral";
-
-        if (analysisResult < 0) {
-            sentiment = "negative";
-        } else if (analysisResult > 0.33) {
-            sentiment = "positive";
-        }
-
-        // Logging the result
-        logger.info(`Sentiment analysis result: ${analysisResult}`);
-        // Responding with the sentiment analysis result
-        res.status(200).json({ sentimentScore: analysisResult, sentiment: sentiment });
-    } catch (error) {
-        logger.error(`Error performing sentiment analysis: ${error}`);
-        res.status(500).json({ message: 'Error performing sentiment analysis' });
+    } catch (e) {
+        logger.console.error('oops something went wrong', e)
+        next(e);
     }
 });
 
-// Start the server
-app.listen(port, () => {
-    logger.info(`Server running on port ${port}`);
+// Add a new item
+router.post('/', upload.single('file'), async(req, res,next)=> {
+
+    try {
+
+        //Step 3: task 1 - insert code here
+        const db = await connectToDatabase();
+        //Step 3: task 2 - insert code here
+        const collection = db.collection("secondChanceItems");
+        //Step 3: task 3 - insert code here
+        let secondChanceItem = req.body;
+        //Step 3: task 4 - insert code here
+        const lastItemQuery = await collection.find().sort({'id': -1}).limit(1);
+    await lastItemQuery.forEach(item => {
+        secondChanceItem.id = (parseInt(item.id) + 1).toString();
+    });
+        //Step 3: task 5 - insert code here
+        const date_added = Math.floor(new Date().getTime() / 1000);
+        secondChanceItem.date_added = date_added
+
+        secondChanceItem = await collection.insertOne(secondChanceItem);
+
+        res.status(201).json(secondChanceItem.ops[0]);
+
+    } catch (e) {
+        next(e);
+    }
 });
+
+// Get a single secondChanceItem by ID
+router.get('/:id', async (req, res, next) => {
+    
+    const id = req.params.id
+
+    try {
+        //Step 4: task 1 - insert code here
+        const db = await connectToDatabase();
+        //Step 4: task 2 - insert code here
+        const collection = db.collection("secondChanceItems");
+        //Step 4: task 3 - insert code here
+        const secondChanceItem = await collection.findOne({ id: id });
+        //Step 4: task 4 - insert code here
+        if (!secondChanceItem) {
+            return res.status(404).send("secondChanceItem not found");
+          }
+          res.json(secondChanceItem);
+    } catch (e) {
+        next(e);
+    }
+});
+
+// Update and existing item
+router.put('/:id', async(req, res,next) => {
+
+    const id = req.params.id
+
+    try {
+        //Step 5: task 1 - insert code here
+        const db = await connectToDatabase();
+        //Step 5: task 2 - insert code here
+        const collection = db.collection("secondChanceItems");
+        //Step 5: task 3 - insert code here
+        const secondChanceItem = await collection.findOne({ id });
+        if (!secondChanceItem) {
+            logger.error('secondChanceItem not found');
+            return res.status(404).json({ error: "secondChanceItem not found" });
+          }
+        //Step 5: task 4 - insert code here
+        secondChanceItem.category = req.body.category;
+        secondChanceItem.condition = req.body.condition;
+        secondChanceItem.age_days = req.body.age_days;
+        secondChanceItem.description = req.body.description;
+        secondChanceItem.age_years = Number((secondChanceItem.age_days/365).toFixed(1));
+        secondChanceItem.updatedAt = new Date();
+
+        const updatepreloveItem = await collection.findOneAndUpdate(
+            { id },
+            { $set: secondChanceItem },
+            { returnDocument: 'after' }
+        );
+        //Step 5: task 5 - insert code here
+        if(updatepreloveItem) {
+            res.json({"uploaded":"success"});
+        } else {
+            res.json({"uploaded":"failed"});
+        }
+    } catch (e) {
+        next(e);
+    }
+});
+
+// Delete an existing item
+router.delete('/:id', async(req, res,next) => {
+
+    const id = req.params.id
+
+    try {
+        //Step 6: task 1 - insert code here
+        const db = await connectToDatabase();
+        //Step 6: task 2 - insert code here
+        const collection = db.collection("secondChanceItems");
+        //Step 6: task 3 - insert code here
+        const secondChanceItem = await collection.findOne({ id });
+        if (!secondChanceItem) {
+            logger.error('secondChanceItem not found');
+            return res.status(404).json({ error: "secondChanceItem not found" });
+          }
+        //Step 6: task 4 - insert code here
+        await collection.deleteOne({ id });
+        res.json({"deleted":"success"});
+    } catch (e) {
+        next(e);
+    }
+});
+
+module.exports = router;

@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const pinoLogger = require('./logger');
+const path = require('path');
 
 const connectToDatabase = require('./models/db');
 const {loadData} = require("./util/import-mongo/index");
@@ -51,6 +52,7 @@ app.use('/api/auth', authRoutes);
 // Search API Task 2: add the searchRoutes to the server by using the app.use() method.
 //{{insert code here}}
 
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
 // Global Error Handler
 app.use((err, req, res, next) => {
@@ -61,6 +63,8 @@ app.use((err, req, res, next) => {
 app.get("/",(req,res)=>{
     res.send("Inside the server")
 })
+
+
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

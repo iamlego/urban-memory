@@ -48,41 +48,47 @@ function MainPage() {
 
     return (
         <div className="container mt-5">
-            {isLoggedIn ? (
-              <button onClick={handleAddItem}>Add Item</button>
-            ) : (
-                null
-            )}
-        <div className="row">
-                {items.map((item) => (
-                    <div key={item.id} className="col-md-4 mb-4">
-                        <div className="card product-card">
-                            <div className="image-placeholder">
-                                {item.image ? (
-                                    <img src={urlConfig.backendUrl+item.image} alt={item.name} />                                ) : (
-                                    <div className="no-image-available">No Image Available</div>
-                                )}
-                            </div>
-                            <div className="card-body">
-                                <h5 className="card-title">{item.name}</h5>
-                                <p className={`card-text ${getConditionClass(item.condition)}`}>
-                                    {item.condition}
-                                </p>
-                                <p className="card-text date-added">
-                                    {formatDate(item.date_added)}
-                                </p>
-                            </div>
-                            <div className="card-footer">
-                                <button onClick={() => goToDetailsPage(item.id)} className="btn btn-primary w-100">
-                                    View Details
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
+          {isLoggedIn ? (
+            <button className="btn btn-success mb-4" onClick={handleAddItem}>Add Item</button>
+          ) : (
+            null
+          )}
+          <div className="row">
+            {items.map((item) => (
+              <div key={item.id} className="col-md-4 mb-4">
+                <div className="card product-card bg-dark text-light">
+                  <div className="image-placeholder">
+                    {item.image ? (
+                      <img src={urlConfig.backendUrl + item.image} alt={item.name} />
+                    ) : (
+                      <div className="no-image-available bg-secondary text-light">
+                        No Image Available
+                      </div>
+                    )}
+                  </div>
+                  <div className="card-body">
+                    <h5 className="card-title">{item.name}</h5>
+                    <p className={`card-text ${getConditionClass(item.condition)}`}>
+                      {item.condition}
+                    </p>
+                    <p className="card-text date-added text-muted">
+                      {formatDate(item.date_added)}
+                    </p>
+                  </div>
+                  <div className="card-footer bg-dark border-top-0">
+                    <button
+                      onClick={() => goToDetailsPage(item.id)}
+                      className="btn btn-primary w-100"
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-    );
+      );
 }
 
 export default MainPage;

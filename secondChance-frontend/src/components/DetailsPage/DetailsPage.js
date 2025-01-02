@@ -51,7 +51,7 @@ function DetailsPage() {
     if (!gift) return <div className="container mt-5">Gift not found</div>;
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5 text-white">
             <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Back</button>
             <div className="card product-details-card">
                 <div className="card-header text-white">
@@ -66,20 +66,20 @@ function DetailsPage() {
                         )}
                     </div>
                     {/* Product details */}
-                    <p><strong>Category:</strong> {gift.category}</p>
-                    <p><strong>Condition:</strong> {gift.condition}</p>
-                    <p><strong>Date Added:</strong> {gift.date_added}</p>
-                    <p><strong>Age (Years):</strong> {gift.age_years}</p>
-                    <p><strong>Description:</strong> {gift.description}</p>
+                    <p className='text-white'><strong>Category:</strong> {gift.category}</p>
+                    <p className='text-white'><strong>Condition:</strong> {gift.condition}</p>
+                    <p className='text-white'><strong>Date Added:</strong> {gift.date_added}</p>
+                    <p className='text-white'><strong>Age (Years):</strong> {gift.age_years}</p>
+                    <p className='text-white'><strong>Description:</strong> {gift.description}</p>
                 </div>
             </div>
-            <div className="comments-section mt-4">
+            <div className="comments-section mt-4 ">
                 <h3 className="mb-3">Comments</h3>
                 {gift.comments.length >0 && gift.comments.map((comment, index) => (
                     <div key={index} className="card mb-3">
                         <div className="card-body">
-                            <p className="comment-author"><strong>{comment.author}:</strong></p>
-                            <p className="comment-text">{comment.comment}</p>
+                            <p className="comment-author text-white"><strong>{comment.author}:</strong></p>
+                            <p className="comment-text text-white">{comment.comment}</p>
                         </div>
                     </div>
                 ))}

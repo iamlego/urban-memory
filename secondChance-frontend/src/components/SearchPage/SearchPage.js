@@ -66,7 +66,7 @@ function SearchPage() {
     return (
         <div className="container mt-5">
           <div className="row justify-content-center">
-            <div className="col-md-6">
+            <div className="col-md-6 col-lg-6">
               <div className="filter-section mb-3 p-3 border rounded bg-dark text-light">
                 <h5>Filters</h5>
                 <div className="d-flex flex-column">
@@ -112,27 +112,31 @@ function SearchPage() {
               <button className="btn btn-primary" onClick={handleSearch}>Search</button>
               <div className="search-results mt-4">
                 {searchResults.length > 0 ? (
-                  searchResults.map(product => (
-                    <div key={product.id} className="card mb-3 bg-dark text-light">
-                      {/* Check if product has an image and display it */}
-                      <img src={urlConfig.backendUrl + product.image} alt={product.name} className="card-img-top" />
-                      <div className="card-body">
-                        <h5 className="card-title">{product.name}</h5>
-                        <p className="card-text">{product.description.slice(0, 100)}...</p>
+                  <div className="row"> 
+                    {searchResults.map(product => (
+                      <div key={product.id} className="col-md-6 mb-3"> {/* Each item takes 6 columns (half of 12) */}
+                        <div className="card bg-dark text-light">
+                      
+                          <img src={urlConfig.backendUrl + product.image} alt={product.name} className="card-img-top" />
+                          <div className="card-body">
+                            <h5 className="card-title">{product.name}</h5>
+                            <p className="card-text">{product.description.slice(0, 100)}...</p>
+                          </div>
+                          <div className="card-footer bg-dark border-top-0">
+                            <button onClick={() => goToDetailsPage(product.id)} className="btn btn-primary">
+                              View More
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <div className="card-footer bg-dark border-top-0">
-                        <button onClick={() => goToDetailsPage(product.id)} className="btn btn-primary">
-                          View More
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="alert alert-info" role="alert">
-                    No products found. Please revise your filters.
+                    ))}
                   </div>
-                )}
-              </div>
+                ) : (
+    <div className="alert alert-info" role="alert">
+      No products found. Please revise your filters.
+    </div>
+  )}
+</div>
             </div>
           </div>
         </div>

@@ -61,91 +61,107 @@ function ItemPage() {
           }
   }
 
-    return (
-      <div className="container mt-5">
-      <div className="row justify-content-center">
-          <div className="col-md-6 col-lg-4">
-              <div className="register-card p-4 border rounded">
-                  <h2 className="text-center mb-4 font-weight-bold">Add Item</h2>
-                  <div className="mb-3">
-                      <label htmlFor="name" className="form-label">Name</label>
-                      <input
-                          id="name"
-                          type="text"
-                          className="form-control"
-                          placeholder="Enter Item Name"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                      />
-                  </div>
+  return (
+    <div className="container mt-5 bg-dark text-white">
+        <div className="row justify-content-center">
+            <div className="col-md-6 col-lg-4">
+                <div className="register-card p-4 border rounded bg-secondary text-white">
+                    <h2 className="text-center mb-4 font-weight-bold">Add Item</h2>
+                    <div className="mb-3">
+                        <label htmlFor="name" className="form-label">Name</label>
+                        <input
+                            id="name"
+                            type="text"
+                            className="form-control bg-dark text-white"
+                            placeholder="Enter Item Name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
 
-                  <div className="d-flex flex-column">
-                            {/* Category Dropdown */}
-                            <label htmlFor="category">Category</label>
-                            <select id="category" className="form-control my-1" onChange={(e) => setCategory(e.target.value)}>
+                    <div className="d-flex flex-column">
+                        {/* Category Dropdown */}
+                        <label htmlFor="category">Category</label>
+                        <select
+                            id="category"
+                            className="form-control my-1 bg-dark text-white"
+                            onChange={(e) => setCategory(e.target.value)}
+                        >
+                            <option key="Living" value="Living">Living</option>
+                            <option key="Bedroom" value="Bedroom">Bedroom</option>
+                            <option key="Bathroom" value="Bathroom">Bathroom</option>
+                            <option key="Kitchen" value="Kitchen">Kitchen</option>
+                            <option key="Office" value="Office">Office</option>
+                        </select>
 
-                                <option key="Living" value="Living">Living</option>
-                                <option key="Bedroom" value="Bedroom">Bedroom</option>
-                                <option key="Bathroom" value="Bathroom">Bathroom</option>
-                                <option key="Kitchen" value="Kitchen">Kitchen</option>
-                                <option key="Office" value="Office">Office</option>
-                            </select>
+                        {/* Condition Dropdown */}
+                        <label htmlFor="condition">Condition</label>
+                        <select
+                            id="condition"
+                            className="form-control my-1 bg-dark text-white"
+                            onChange={(e) => setCondition(e.target.value)}
+                        >
+                            <option key="New" value="New">New</option>
+                            <option key="Like New" value="Like New">Like New</option>
+                            <option key="Older" value="Older">Older</option>
+                        </select>
+                    </div>
 
-                            {/* Condition Dropdown */}
-                            <label htmlFor="condition">Condition</label>
-                            <select id="condition" className="form-control my-1" onChange={(e) => setCondition(e.target.value)}>
-                                <option key="New" value="New">New</option>
-                                <option key="Like New" value="Like New">Like New</option>
-                                <option key="Older" value="Older">Older</option>
-                            </select>
-                  </div>
+                    <div className="mb-3">
+                        <label htmlFor="zipcode" className="form-label">Zipcode</label>
+                        <input
+                            id="zipcode"
+                            type="text"
+                            className="form-control bg-dark text-white"
+                            placeholder="Enter the Zipcode"
+                            value={zipcode}
+                            onChange={(e) => setZipcode(e.target.value)}
+                        />
+                    </div>
 
-                  <div className="mb-3">
-                      <label htmlFor="zipcode" className="form-label">Zipcode</label>
-                      <input
-                          id="zipcode"
-                          type="text"
-                          className="form-control"
-                          placeholder="Enter the Zipcode"
-                          value={zipcode}
-                          onChange={(e) => setZipcode(e.target.value)}
-                      />
-                  </div>
+                    <div className="mb-3">
+                        <label htmlFor="age_days" className="form-label">Age in days</label>
+                        <input
+                            id="age_days"
+                            type="text"
+                            className="form-control bg-dark text-white"
+                            placeholder="Enter the Age in days"
+                            value={age_days}
+                            onChange={(e) => setAge_days(e.target.value)}
+                        />
+                    </div>
 
-                  <div className="mb-3">
-                      <label htmlFor="age_days" className="form-label">Age in days</label>
-                      <input
-                          id="age_days"
-                          type="text"
-                          className="form-control"
-                          placeholder="Enter the  Age in days"
-                          value={age_days}
-                          onChange={(e) => setAge_days(e.target.value)}
-                      />
-                  </div>
+                    <div className="mb-3">
+                        <label htmlFor="description" className="form-label">Description</label>
+                        <textarea
+                            id="description"
+                            cols="2"
+                            className="form-control bg-dark text-white"
+                            placeholder="Enter the description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </div>
 
-                  <div className="mb-3">
-                      <label htmlFor="description" className="form-label">Description</label>
-                      <textarea
-                          id="description"
-                          cols="2"
-                          className="form-control"
-                          placeholder="Enter the  description"
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                      />
-                  </div>
-                  <input style={{padding:'.5cm'}} type="file" id="file" name="file" accept=".jpg, .png, .gif"/>
+                    <input
+                        style={{ padding: '.5cm' }}
+                        type="file"
+                        id="file"
+                        name="file"
+                        accept=".jpg, .png, .gif"
+                        className="bg-dark text-white"
+                    />
 
-                  <button className="btn btn-primary w-100 mb-3" onClick={handleAddItem}>Add Item</button>
+                    <button className="btn btn-primary w-100 mb-3" onClick={handleAddItem}>Add Item</button>
 
-                  <span style={{color:'green',height:'.5cm',display:'block',fontStyle:'italic',fontSize:'12px'}}>{message}</span>
-
-              </div>
-          </div>
-      </div>
-  </div>      
-    );
+                    <span style={{ color: 'green', height: '.5cm', display: 'block', fontStyle: 'italic', fontSize: '12px' }}>
+                        {message}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+);
 }
 
 export default ItemPage;

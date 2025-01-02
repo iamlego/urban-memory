@@ -23,7 +23,7 @@ async function connectToDatabase() {
     // Task 2: Connect to database giftDB and store in variable dbInstance
     dbInstance = client.db('secondChance');
     
-    console.log(dbInstance);
+    // console.log(dbInstance);
     // Task 3: Return database instance
     return dbInstance
 }
